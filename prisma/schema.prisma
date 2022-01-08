@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                Int         @id @default(autoincrement())
+  name              String
+  thumbnailImageUrl String?
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime?   @updatedAt
+  UserGroup         UserGroup[]
+  Group             Group[]
+
+  UserMission UserMission[]
+  @@map("users")
+}
+
+model Group {
+  id                Int         @id @default(autoincrement())
+  name              String
+  hostId            Int         @map("host_id")
+  thumbnailImageUrl String?     @map("thumbnail_image_url")
+  maximumMember     Int         @default(12)
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime?   @updatedAt
+  groupStatusId     Int         @map("group_status_id")
+  missionTypeId     Int         @map("mission_type_id")
+  host              User        @relation(fields: [hostId], references: [id])
+  groupStatus       GroupStatus @relation(fields: [groupStatusId], references: [id])
+  missionType       MissionType @relation(fields: [missionTypeId], references: [id])
+  groupTag          GroupTag[]
+  userGroup         UserGroup[]
+  mission           Mission[]
+
+  @@map("groups")
+}
+
+model GroupStatus {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  group     Group[]
+
+  @@map("group_status")
+}
+
+model Mission {
+  id             Int       @id @default(autoincrement())
+  name           String
+  content        String?
+  startsAt       DateTime  @map("starts_at")
+  endsAt         DateTime  @map("ends_at")
+  checkStartTime DateTime? @map("check_start_time") @db.Time
+  checkEndTime   DateTime? @map("check_end_time") @db.Time
+  createdAt      DateTime  @default(now()) @map("created_at")
+  groupId        Int       @map("group_id")
+  group          Group     @relation(fields: [groupId], references: [id])
+
+  UserMission UserMission[]
+  @@map("missions")
+}
+
+model MissionType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  group     Group[]
+
+  @@map("mission_types")
+}
+
+model Tag {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now()) @map("created_at")
+  groupTag  GroupTag[]
+
+  @@map("tags")
+}
+
+model GroupTag {
+  id        Int      @id @default(autoincrement())
+  groupId   Int      @map("group_id")
+  tagId     Int      @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  group Group @relation(fields: [groupId], references: [id])
+  tag   Tag   @relation(fields: [tagId], references: [id])
+
+  @@map("group_tags")
+}
+
+model UserGroup {
+  id        Int      @id @default(autoincrement())
+  groupId   Int      @map("group_id")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  group Group @relation(fields: [groupId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@map("user_groups")
+}
+
+model UserMission {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  missionId Int       @map("mission_id")
+  date      DateTime? @db.Date
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  mission Mission @relation(fields: [missionId], references: [id])
+
+  @@map("user_missions")
+}
