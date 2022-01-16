@@ -3,8 +3,9 @@ import { missionService } from "../services";
 const getMissions = async (req, res) => {
   try {
     const userId = 1
-    const missions = await missionService.getMissions(userId);
-    return res.status(200).json({ missions });
+    const { groupId } = req.query
+    const groupMissions = await missionService.getMissions(userId, groupId);
+    return res.status(200).json({ groupMissions });
   } catch (err) {
     console.log(err);
   }

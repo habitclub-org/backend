@@ -3,7 +3,8 @@ import { groupService } from "../services";
 const getGroups = async (req, res) => {
   try {
     const userId = 1
-    const groups = await groupService.getGroups(userId);
+    const { search } = req.query
+    const groups = await groupService.getGroups(userId, search);
     return res.status(200).json({ groups });
   } catch (err) {
     console.log(err);

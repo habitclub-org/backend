@@ -1,5 +1,24 @@
 import { userService } from "../services";
 
+const signUp = async (req, res) => {
+  try {
+    const { name, email } = req.params
+    await userService.signUp(name, email)
+
+    return res.status(201).json({ message: 'CREATED' })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const signIn = async (req, res) => {
+  try {
+    const { email } = req.params
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 const kakaoLogin = async (req, res) => {
   try {
     const kakaoToken = req.headers.authorization;
@@ -11,4 +30,4 @@ const kakaoLogin = async (req, res) => {
   }
 };
 
-export default { kakaoLogin };
+export default { kakaoLogin, signUp };

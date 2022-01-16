@@ -1,7 +1,12 @@
 import prisma from "../prisma";
 
-const getGroups = async () => {
+const getGroups = async (search) => {
   return await prisma.group.findMany({
+    where: {
+      name: {
+        contains: search
+      }
+    },
     select : {
       name: true,
       maximumMember: true,
@@ -41,31 +46,4 @@ const getGroups = async () => {
   });
 };
 
-const getGroupsWithMissions = async (userId, date, groupId) => {
-  return await prisma.group.findMany({
-    where: {
-      id: groupId
-    },
-    select: {
-      id: true,
-      name: true,
-      mission: {
-        select: {
-          id: true,
-          name: true,
-          content: true,
-          checkStartTime: true,
-          checkEndTime: true,
-          UserMission: {
-            where: {
-              userId,
-              date
-            }
-          } 
-        },
-      }
-    }
-  })
-}
-
-export default { getGroups, getGroupsWithMissions };
+export default { getGroups };

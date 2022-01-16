@@ -1,7 +1,7 @@
 import { groupDao } from "../models";
 
-const getGroups = async (userId) => {
-  const groups = await groupDao.getGroups();
+const getGroups = async (userId, search) => {
+  const groups = await groupDao.getGroups(search);
 
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i]
