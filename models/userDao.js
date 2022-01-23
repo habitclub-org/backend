@@ -1,5 +1,40 @@
 import prisma from "../prisma";
 
+const getUserByEmail = async (email) => {
+  return await prisma.user.findUnique({
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      // profileImageUrl: true,
+    },
+    where: {
+      email: `${email}`,
+    },
+  });
+}
+
+const getUserById = async (id) => {
+  return await prisma.user.findUnique({
+    select: {
+      id: true,
+      email: true,
+      name: true
+    },
+    where: {
+      id
+    }
+  })
+}
+
+const createUser = async (email, name) => {
+  return await prisma.user.create({
+    data: {
+      name,
+      email
+    }
+  })
+}
 const getUserByKakaoAccount = async (email) => {
   return await prisma.user.findUnique({
     select: {
@@ -47,6 +82,9 @@ const findUserById = async (id) => {
 };
 
 export default {
+  createUser,
+  getUserByEmail,
+  getUserById,
   getUserByKakaoAccount,
   createUserWithKakaoAccount,
   findUserById,

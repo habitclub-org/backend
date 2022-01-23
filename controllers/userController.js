@@ -1,19 +1,17 @@
 import { userService } from "../services";
 
 const signUp = async (req, res) => {
-  try {
-    const { name, email } = req.params
-    await userService.signUp(name, email)
+  const { name, email } = req.body
+  await userService.signUp(email, name)
 
-    return res.status(201).json({ message: 'CREATED' })
-  } catch (err) {
-    console.log(err);
-  }
+  return res.status(201).json({ message: 'CREATED' })
 }
 
 const signIn = async (req, res) => {
   try {
-    const { email } = req.params
+    const { email } = req.body
+    const userToken = await userService.signIn(email)
+    return res.status(200).json({ message: 'SUCCESS', token: userToken })
   } catch (err) {
     console.log(err);
   }
@@ -30,4 +28,4 @@ const kakaoLogin = async (req, res) => {
   }
 };
 
-export default { kakaoLogin, signUp };
+export default { kakaoLogin, signUp, signIn };

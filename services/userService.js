@@ -2,6 +2,33 @@ import { userDao } from "../models";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 
+const signUp = async (email, name) => {
+  console.log(email, name)
+  const existingUser = await userDao.getUserByEmail(email)
+
+  if (existingUser) {
+    const error = new Error("USER_ALREADY_EXIST") 
+    error.statusCode = 409
+
+    return error
+  }
+  return await userDao.createUser(email, name)
+}
+
+const signIn = async (email) => {
+  const existingUser = await userDao.getUserByEmail(email)
+
+  if (!existingUser) {
+
+  }
+  const userToken = jwt.sign({ userId: existingUser.id }, process.env.JWT_SECRET_KEY)
+  return userToken 
+}
+
+const findUser = async (id) => {
+  return await userDao.getUserById(id)
+}
+
 const kakaoLogin = async (kakaoToken) => {
   const kakaoAccessToken = kakaoToken.replace("Bearer ", "");
   const kakaoInfo = await axios({
@@ -38,4 +65,9 @@ const kakaoLogin = async (kakaoToken) => {
   };
 };
 
-export default { kakaoLogin };
+export default {
+  signUp,
+  signIn,
+  findUser,
+  kakaoLogin
+};
