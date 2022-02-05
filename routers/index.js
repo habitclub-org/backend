@@ -13,6 +13,6 @@ router.use("/ping", (req, res) => {
 
 router.use("/users", userRouter);
 router.use("/groups", validateToken, groupRouter);
-router.use("/missions", missionRouter)
+router.use("/missions", validateToken, missionRouter)
 
 export default router;

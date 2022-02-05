@@ -3,7 +3,12 @@ import prisma from "../prisma";
 const getMissions = async (userId, date, groupId) => {
   return await prisma.group.findMany({
     where: {
-      groupId: groupId
+      id: groupId,
+      userGroup: {
+        some: {
+          userId
+        }
+      }
     },
     select: {
       id: true,
@@ -16,6 +21,11 @@ const getMissions = async (userId, date, groupId) => {
           checkStartTime: true,
           checkEndTime: true,
           UserMission: {
+            select: {
+              date: true,
+              userId: true,
+              missionId: true,
+            },
             where: {
               userId,
               date

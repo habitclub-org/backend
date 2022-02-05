@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 
 const signUp = async (email, name) => {
-  console.log(email, name)
   const existingUser = await userDao.getUserByEmail(email)
 
   if (existingUser) {

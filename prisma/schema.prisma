@@ -11,35 +11,39 @@ generator client {
 }
 
 model User {
-  id                Int         @id @default(autoincrement())
-  email             String?     @unique
-  name              String
-  thumbnailImageUrl String?
-  createdAt         DateTime    @default(now()) @map("created_at")
-  updatedAt         DateTime?   @updatedAt
-  UserGroup         UserGroup[]
-  Group             Group[]
+  id              Int       @id @default(autoincrement())
+  email           String?   @unique
+  name            String
+  profileImageUrl String?   @map("profile_image_url")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
 
-  UserMission UserMission[]
+  UserGroup             UserGroup[]
+  Group                 Group[]
+  UserMission           UserMission[]
+  UserMissionStatistics UserMissionStatistics[]
+
   @@map("users")
 }
 
 model Group {
-  id                Int         @id @default(autoincrement())
-  name              String
-  hostId            Int         @map("host_id")
-  thumbnailImageUrl String?     @map("thumbnail_image_url")
-  maximumMember     Int         @default(12)
-  createdAt         DateTime    @default(now()) @map("created_at")
-  updatedAt         DateTime?   @updatedAt
-  groupStatusId     Int         @map("group_status_id")
-  missionTypeId     Int         @map("mission_type_id")
-  host              User        @relation(fields: [hostId], references: [id])
-  groupStatus       GroupStatus @relation(fields: [groupStatusId], references: [id])
-  missionType       MissionType @relation(fields: [missionTypeId], references: [id])
-  groupTag          GroupTag[]
-  userGroup         UserGroup[]
-  mission           Mission[]
+  id                     Int       @id @default(autoincrement())
+  name                   String
+  hostId                 Int       @map("host_id")
+  thumbnailImageUrl      String?   @map("thumbnail_image_url")
+  maximumMember          Int       @default(12) @map("maximum_member")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+  enrollmentAvailability Boolean   @default(true) @map("enrollment_availability")
+  groupStatusId          Int       @map("group_status_id")
+  missionTypeId          Int       @map("mission_type_id")
+
+  host        User        @relation(fields: [hostId], references: [id])
+  groupStatus GroupStatus @relation(fields: [groupStatusId], references: [id])
+  missionType MissionType @relation(fields: [missionTypeId], references: [id])
+  groupTag    GroupTag[]
+  userGroup   UserGroup[]
+  mission     Mission[]
 
   @@map("groups")
 }
@@ -63,9 +67,11 @@ model Mission {
   checkEndTime   DateTime? @map("check_end_time") @db.Time
   createdAt      DateTime  @default(now()) @map("created_at")
   groupId        Int       @map("group_id")
-  group          Group     @relation(fields: [groupId], references: [id])
 
-  UserMission UserMission[]
+  group                 Group                   @relation(fields: [groupId], references: [id])
+  UserMission           UserMission[]
+  UserMissionStatistics UserMissionStatistics[]
+
   @@map("missions")
 }
 
@@ -73,16 +79,18 @@ model MissionType {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  group     Group[]
+
+  group Group[]
 
   @@map("mission_types")
 }
 
 model Tag {
-  id        Int        @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  createdAt DateTime   @default(now()) @map("created_at")
-  groupTag  GroupTag[]
+  createdAt DateTime @default(now()) @map("created_at")
+
+  groupTag GroupTag[]
 
   @@map("tags")
 }
@@ -122,4 +130,19 @@ model UserMission {
   mission Mission @relation(fields: [missionId], references: [id])
 
   @@map("user_missions")
+}
+
+model UserMissionStatistics {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @map("user_id")
+  missionId        Int       @map("mission_id")
+  totalCheckNeeded Int?      @map("total_check_needed")
+  checkCompleted   Int?      @map("check_completed")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  mission Mission @relation(fields: [missionId], references: [id])
+
+  @@map("user_mission_statistics")
 }

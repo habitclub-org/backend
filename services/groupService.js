@@ -1,7 +1,12 @@
 import { groupDao } from "../models";
+import { groupType } from "../types";
 
-const getGroups = async (userId, search) => {
-  const groups = await groupDao.getGroups(search);
+const getGroups = async (userId, type, search) => {
+  if (type == groupType.myGroup) {
+    var groups = await groupDao.getGroupsByUserId(userId)
+  } else {
+    var groups = await groupDao.getGroups(search);
+  }
 
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i]
@@ -15,6 +20,7 @@ const getGroups = async (userId, search) => {
     group.daysLeft = Math.trunc(daysLeft/1000/3600/24)
     group.isPrivate = group.groupStatus.name === 'PRIVATE'
     group.isEnrolled = group.userGroup.filter(function(e) { return e.user.id === Number(userId) }).length > 0
+    group.isAvailable = group.enrollmentAvailability
     group.tags = []
 
     for (let j = 0; j < group.groupTag.length; j++) {
@@ -26,6 +32,7 @@ const getGroups = async (userId, search) => {
     delete group.mission
     delete group.groupStatus
     delete group.groupTag
+    delete group.enrollmentAvailability
   }
   return groups
 };
