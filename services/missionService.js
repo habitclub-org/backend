@@ -57,4 +57,9 @@ const getMissions = async (userId, date, groupId) => {
   return groups 
 };
 
-export default { getMissions };
+const getMissionStatistics = async (userId) => {
+  const s = await missionDao.getMissionStatistics(userId)
+  return s
+}
+
+export default { getMissions, getMissionStatistics };

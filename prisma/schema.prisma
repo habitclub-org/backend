@@ -23,6 +23,7 @@ model User {
   UserMission           UserMission[]
   UserMissionStatistics UserMissionStatistics[]
 
+  UserTag UserTag[]
   @@map("users")
 }
 
@@ -92,6 +93,7 @@ model Tag {
 
   groupTag GroupTag[]
 
+  UserTag UserTag[]
   @@map("tags")
 }
 
@@ -105,6 +107,18 @@ model GroupTag {
   tag   Tag   @relation(fields: [tagId], references: [id])
 
   @@map("group_tags")
+}
+
+model UserTag {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  tagId     Int      @map("tage_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id])
+
+  @@map("user_tags")
 }
 
 model UserGroup {

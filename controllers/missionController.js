@@ -12,4 +12,14 @@ const getMissions = async (req, res) => {
   }
 };
 
-export default { getMissions };
+const getMissionStatistics = async (req, res) => {
+  try {
+    const userId = req.foundUser.id
+    const missionStatistics = await missionService.getMissionStatistics(userId);
+    return res.status(200).json({ missionStatistics })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export default { getMissions, getMissionStatistics };

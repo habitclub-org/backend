@@ -5,7 +5,7 @@ const getGroups = async (req, res) => {
     const userId = req.foundUser.id
     const { search, type } = req.query
     const groups = await groupService.getGroups(userId, type, search);
-    return res.status(200).json({ groups });
+    return res.status(200).json({ data: groups });
   } catch (err) {
     console.log(err);
   }

@@ -34,7 +34,7 @@ const getGroups = async (userId, type, search) => {
     delete group.groupTag
     delete group.enrollmentAvailability
   }
-  return groups
+  return { numGroups: groups.length, groups }
 };
 
 const getGroupsWithMissions = async (userId) => {
