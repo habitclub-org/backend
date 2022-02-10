@@ -15,6 +15,7 @@ model User {
   email           String?   @unique
   name            String
   profileImageUrl String?   @map("profile_image_url")
+  checkDays       Int?      @map("check_days")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime? @updatedAt @map("updated_at")
 
@@ -22,8 +23,8 @@ model User {
   Group                 Group[]
   UserMission           UserMission[]
   UserMissionStatistics UserMissionStatistics[]
+  UserTag               UserTag[]
 
-  UserTag UserTag[]
   @@map("users")
 }
 
@@ -53,7 +54,8 @@ model GroupStatus {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  group     Group[]
+
+  group Group[]
 
   @@map("group_status")
 }
@@ -64,10 +66,10 @@ model Mission {
   content        String?
   startsAt       DateTime  @map("starts_at")
   endsAt         DateTime  @map("ends_at")
-  checkStartTime DateTime? @map("check_start_time") @db.Time
-  checkEndTime   DateTime? @map("check_end_time") @db.Time
-  createdAt      DateTime  @default(now()) @map("created_at")
+  checkStartTime DateTime? @map("check_start_time") @db.Time(0)
+  checkEndTime   DateTime? @map("check_end_time") @db.Time(0)
   groupId        Int       @map("group_id")
+  createdAt      DateTime  @default(now()) @map("created_at")
 
   group                 Group                   @relation(fields: [groupId], references: [id])
   UserMission           UserMission[]
@@ -92,8 +94,8 @@ model Tag {
   createdAt DateTime @default(now()) @map("created_at")
 
   groupTag GroupTag[]
+  UserTag  UserTag[]
 
-  UserTag UserTag[]
   @@map("tags")
 }
 

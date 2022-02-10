@@ -2,6 +2,7 @@ import express from "express";
 import userRouter from "./userRouter";
 import groupRouter from "./groupRouter";
 import missionRouter from "./missionRouter"
+import tagRouter from "./tagRouter"
 import validateToken from "../middlewares/validateToken";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.use("/ping", (req, res) => {
 router.use("/users", userRouter);
 router.use("/groups", validateToken, groupRouter);
 router.use("/missions", validateToken, missionRouter)
+router.use("/tags", validateToken, tagRouter)
 
 export default router;

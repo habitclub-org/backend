@@ -38,34 +38,34 @@ const getMissions = async (userId, date, groupId) => {
 }
 
 const getMissionStatistics = async (userId) => {
-  const checkStatistics = prisma.userMissionStatistics.findMany(
-    {
-      where: {
-        userId
-      },
-      select: {
-        missionId: true,
-        checkCompleted: true,
-        totalCheckNeeded: true
-      }
-    }
-  )
-
-  const checkDays = await prisma.userMission.groupBy({
-    // by: ['date', 'id', 'userId', 'missionId'],
-    by: ['date'],
+  const checkNeeded= await prisma.userMissionStatistics.aggregate({
     where: {
       userId
     },
-    select: {
-      id: true,
-      userId: true,
-      missionId: true,
-      date: true
+    _sum: {
+      totalCheckNeeded: true
     }
   })
 
-  console.log(checkDays)
+  const checkCompletes = await prisma.userMissionStatistics.aggregate({
+    where: {
+      userId
+    },
+    _sum: {
+      checkCompleted: true
+    }
+  })
+
+  const checkDays = await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    select: {
+      checkDays: true
+    }
+  })
+
+  return { checkNeeded, checkCompletes, checkDays }
 }
 
 export default { getMissions, getMissionStatistics };

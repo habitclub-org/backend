@@ -58,8 +58,12 @@ const getMissions = async (userId, date, groupId) => {
 };
 
 const getMissionStatistics = async (userId) => {
-  const s = await missionDao.getMissionStatistics(userId)
-  return s
+  const stat = await missionDao.getMissionStatistics(userId)
+  return {
+    completeRate: stat.checkCompletes._sum.checkCompleted / stat.checkNeeded._sum.totalCheckNeeded * 100,
+    completes: stat.checkCompletes._sum.checkCompleted,
+    completedDays: stat.checkDays.checkDays
+  }
 }
 
 export default { getMissions, getMissionStatistics };
