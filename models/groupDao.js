@@ -1,7 +1,9 @@
 import prisma from "../prisma";
 
-const getGroupsByUserId = async (userId) => {
+const getGroupsByUserId = async (userId, item, page) => {
   return await prisma.group.findMany({
+    take: +item,
+    skip: (+page - 1) * +item,
     where: {
       userGroup: {
         some: {
@@ -57,8 +59,10 @@ const getGroupsByUserId = async (userId) => {
   });
 }
 
-const getGroups = async (search) => {
+const getGroups = async (search, item, page) => {
   return await prisma.group.findMany({
+    take: +item,
+    skip: (+page - 1) * +item,
     where: {
       name: {
         contains: search

@@ -1,11 +1,11 @@
 import { groupDao } from "../models";
 import { groupType } from "../types";
 
-const getGroups = async (userId, type, search) => {
+const getGroups = async (userId, type, search, item=5, page=1) => {
   if (type == groupType.myGroup) {
-    var groups = await groupDao.getGroupsByUserId(userId)
+    var groups = await groupDao.getGroupsByUserId(userId, item, page)
   } else {
-    var groups = await groupDao.getGroups(search);
+    var groups = await groupDao.getGroups(search, item, page);
   }
 
   for (let i = 0; i < groups.length; i++) {

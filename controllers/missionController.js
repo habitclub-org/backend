@@ -4,8 +4,8 @@ const getMissions = async (req, res) => {
   try {
     const userId = req.foundUser.id 
     const groupId = req.query.groupId ? Number(req.query.groupId) : req.query.groupId
-    const date = req.query.date
-    const groupMissions = await missionService.getMissions(userId, date, groupId);
+    const { date, item, page } = req.query
+    const groupMissions = await missionService.getMissions(userId, date, groupId, item, page);
     return res.status(200).json({ groupMissions });
   } catch (err) {
     console.log(err);

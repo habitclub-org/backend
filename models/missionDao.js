@@ -1,7 +1,9 @@
 import prisma from "../prisma";
 
-const getMissions = async (userId, date, groupId) => {
+const getMissions = async (userId, date, groupId, item, page) => {
   return await prisma.group.findMany({
+    take: +item,
+    skip: (+page - 1) * +item,
     where: {
       id: groupId,
       userGroup: {
