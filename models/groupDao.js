@@ -37,7 +37,13 @@ const getGroupsByUserId = async (userId) => {
           tag: {
             select: {
               id: true,
-              name: true
+              name: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
             }
           }
         }
@@ -86,7 +92,13 @@ const getGroups = async (search) => {
           tag: {
             select: {
               id: true,
-              name: true
+              name: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
             }
           }
         }

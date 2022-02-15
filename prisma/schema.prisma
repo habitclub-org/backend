@@ -88,11 +88,23 @@ model MissionType {
   @@map("mission_types")
 }
 
-model Tag {
+model TagCategory {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
 
+  Tag Tag[]
+
+  @@map("tag_categories")
+}
+
+model Tag {
+  id         Int      @id @default(autoincrement())
+  name       String
+  categoryId Int?     @map("category_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  category TagCategory? @relation(fields: [categoryId], references: [id])
   groupTag GroupTag[]
   UserTag  UserTag[]
 

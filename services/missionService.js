@@ -44,7 +44,7 @@ const getMissions = async (userId, date, groupId) => {
         mission.checkAvailabilty = 'available'
       }
 
-      mission.isChecked = mission.UserMission.length > 0
+      mission.isCompleted = mission.UserMission.length > 0
       mission.startTime = mission.checkStartTime.toLocaleTimeString()
       mission.endTime = mission.checkEndTime.toLocaleTimeString()
 

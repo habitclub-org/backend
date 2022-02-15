@@ -24,8 +24,8 @@ const getGroups = async (userId, type, search) => {
     group.tags = []
 
     for (let j = 0; j < group.groupTag.length; j++) {
-      const { id, name } = group.groupTag[j].tag
-      group.tags.push({id, name})
+      const { id, name, category } = group.groupTag[j].tag
+      group.tags.push({id, name, tagCategory: category})
     }
 
     delete group.userGroup
@@ -55,7 +55,7 @@ const getGroupsWithMissions = async (userId) => {
       } else {
         mission.checkAvailabilty = 'available'
       }
-      mission.isChecked = mission.UserMission.length > 0
+      mission.isCompleted = mission.UserMission.length > 0
 
       delete mission.UserMission
     }
