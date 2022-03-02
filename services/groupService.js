@@ -51,9 +51,9 @@ const getGroupsWithMissions = async (userId) => {
       if (mission.checkStartTime - now > 0) {
         mission.checkAvailability = 'waiting'
       } else if (mission.checkEndTime - now < 0) {
-        mission.checkAvailabilty = 'failed'
+        mission.checkAvailability = 'failed'
       } else {
-        mission.checkAvailabilty = 'available'
+        mission.checkAvailability = 'available'
       }
       mission.isCompleted = mission.UserMission.length > 0
 

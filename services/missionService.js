@@ -39,9 +39,9 @@ const getMissions = async (userId, date, groupId, limit=5, page=1) => {
       if (nowt < mst) {
         mission.checkAvailability = 'waiting'
       } else if (met < nowt) {
-        mission.checkAvailabilty = 'failed'
+        mission.checkAvailability = 'failed'
       } else {
-        mission.checkAvailabilty = 'available'
+        mission.checkAvailability = 'available'
       }
 
       mission.isCompleted = mission.UserMission.length > 0
