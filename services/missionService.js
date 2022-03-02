@@ -1,13 +1,13 @@
 import { missionDao } from "../models";
 
-const getMissions = async (userId, date, groupId, item=5, page=1) => {
+const getMissions = async (userId, date, groupId, limit=5, page=1) => {
   const [yyyy, mm, dd] = date.split('-')
 
   let inputDate = new Date()
   inputDate.setUTCFullYear(yyyy, mm-1, dd)
   inputDate.setUTCHours(0,0,0,0)
 
-  const groups = await missionDao.getMissions(userId, inputDate, groupId, item, page);
+  const groups = await missionDao.getMissions(userId, inputDate, groupId, limit, page);
 
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i]

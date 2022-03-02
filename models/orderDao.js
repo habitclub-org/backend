@@ -1,7 +1,6 @@
 import prisma from "../prisma";
 
 const getOrders = async (orderStatusId) => {
-  console.log('orderStatusId: ', orderStatusId)
   return await prisma.order.findMany({
     include: {
       ordererName: true,

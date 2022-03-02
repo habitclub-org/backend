@@ -4,8 +4,8 @@ const getMissions = async (req, res) => {
   try {
     const userId = req.foundUser.id 
     const groupId = req.query.groupId ? Number(req.query.groupId) : req.query.groupId
-    const { date, item, page } = req.query
-    const groupMissions = await missionService.getMissions(userId, date, groupId, item, page);
+    const { date, limit, page } = req.query
+    const groupMissions = await missionService.getMissions(userId, date, groupId, limit, page);
     return res.status(200).json({ groupMissions });
   } catch (err) {
     console.log(err);
@@ -16,7 +16,7 @@ const getMissionStatistics = async (req, res) => {
   try {
     const userId = req.foundUser.id
     const missionStatistics = await missionService.getMissionStatistics(userId);
-    return res.status(200).json({ missionStatistics })
+    return res.status(200).json( missionStatistics )
   } catch (err) {
     console.log(err)
   }
