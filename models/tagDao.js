@@ -6,6 +6,7 @@ const getUserTagByUserId = async (userId) => {
       userId
 		},
 		select: {
+			userId: true,
 			tag: {
 				select: {
 					id: true,

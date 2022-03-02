@@ -44,11 +44,11 @@ const getMissions = async (userId, date, groupId, limit=5, page=1) => {
         mission.checkAvailability = 'available'
       }
 
-      mission.isCompleted = mission.UserMission.length > 0
+      mission.isCompleted = mission.userMission.length > 0
       mission.startTime = mission.checkStartTime.toLocaleTimeString()
       mission.endTime = mission.checkEndTime.toLocaleTimeString()
 
-      delete mission.UserMission
+      delete mission.userMission
       delete mission.checkStartTime
       delete mission.checkEndTime
     }
@@ -66,4 +66,15 @@ const getMissionStatistics = async (userId) => {
   }
 }
 
-export default { getMissions, getMissionStatistics };
+const getMissionCompleteness = async (userId, date) => {
+  const [yyyy, mm, dd] = date.split('-')
+
+  let inputDate = new Date()
+  inputDate.setUTCFullYear(yyyy, mm-1, dd)
+  inputDate.setUTCHours(0,0,0,0)
+
+  const completeness = await missionDao.getUserMission(userId, inputDate);
+  return completeness
+}
+
+export default { getMissions, getMissionStatistics, getMissionCompleteness };

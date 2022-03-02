@@ -16,10 +16,21 @@ const getMissionStatistics = async (req, res) => {
   try {
     const userId = req.foundUser.id
     const missionStatistics = await missionService.getMissionStatistics(userId);
-    return res.status(200).json( missionStatistics )
+    return res.status(200).json(missionStatistics)
   } catch (err) {
     console.log(err)
   }
 }
 
-export default { getMissions, getMissionStatistics };
+const getMissionCompleteness = async (req, res) => {
+  try {
+    const userId = req.foundUser.id
+    const { date } = req.query
+    const completeness = await missionService.getMissionCompleteness(userId, date)
+    return res.status(200).json(completeness)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export default { getMissions, getMissionStatistics, getMissionCompleteness };

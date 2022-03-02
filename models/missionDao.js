@@ -22,7 +22,7 @@ const getMissions = async (userId, date, groupId, limit, page) => {
           content: true,
           checkStartTime: true,
           checkEndTime: true,
-          UserMission: {
+          userMission: {
             select: {
               date: true,
               userId: true,
@@ -70,4 +70,28 @@ const getMissionStatistics = async (userId) => {
   return { checkNeeded, checkCompletes, checkDays }
 }
 
-export default { getMissions, getMissionStatistics };
+const getUserMission = async (userId, date) => {
+  return histories = await prisma.userMission.findMany({
+    where: {
+      userId,
+      date
+    },
+    select: {
+      id: true,
+      mission: {
+        select: {
+          id: true,
+          name: true,
+        }
+      },
+      userMissionImage: {
+        select: {
+          id: true,
+          imageUrl: true,
+          createdAt: true
+        }
+      } 
+    }
+  })
+}
+export default { getMissions, getMissionStatistics, getUserMission };
