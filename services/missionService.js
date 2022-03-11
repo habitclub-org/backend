@@ -1,3 +1,4 @@
+import e from "cors";
 import { missionDao } from "../models";
 
 const getMissions = async (userId, date, groupId, limit=5, page=1) => {
@@ -60,6 +61,8 @@ const getMissions = async (userId, date, groupId, limit=5, page=1) => {
 const getMissionStatistics = async (userId) => {
   const stat = await missionDao.getMissionStatistics(userId)
   return {
+    user: stat.userInfo.name,
+    userTags: stat.userInfo.userTag.map((e) => (e.tag)),
     completeRate: stat.checkCompletes._sum.checkCompleted / stat.checkNeeded._sum.totalCheckNeeded * 100,
     completes: stat.checkCompletes._sum.checkCompleted,
     completedDays: stat.checkDays.checkDays
@@ -74,6 +77,12 @@ const getMissionCompleteness = async (userId, date) => {
   inputDate.setUTCHours(0,0,0,0)
 
   const completeness = await missionDao.getUserMission(userId, inputDate);
+  console.log(completeness)
+
+  completeness.forEach(group => {
+    group.missionImages = []
+    group.mission
+  })
   return completeness
 }
 

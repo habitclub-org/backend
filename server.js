@@ -7,7 +7,7 @@ import router from "./routers";
 
 dotenv.config();
 
-const PORT = 8000;
+const PORT = process.env.PORT;
 const app = express();
 const server = http.createServer(app);
 

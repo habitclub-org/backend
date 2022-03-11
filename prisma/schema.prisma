@@ -154,16 +154,16 @@ model UserMission {
   date      DateTime? @db.Date
   createdAt DateTime  @default(now()) @map("created_at")
 
-  user             User               @relation(fields: [userId], references: [id])
-  mission          Mission            @relation(fields: [missionId], references: [id])
-  userMissionImage UserMissionImage[]
+  user             User              @relation(fields: [userId], references: [id])
+  mission          Mission           @relation(fields: [missionId], references: [id])
+  userMissionImage UserMissionImage?
 
   @@map("user_missions")
 }
 
 model UserMissionImage {
   id            Int      @id @default(autoincrement())
-  userMissionId Int      @map("user_mission_id")
+  userMissionId Int      @map("user_mission_id")@unique
   imageUrl      String   @map("image_url")
   createdAt     DateTime @default(now()) @map("created_at")
 

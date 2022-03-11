@@ -40,7 +40,32 @@ const getMissions = async (userId, date, groupId, limit, page) => {
 }
 
 const getMissionStatistics = async (userId) => {
-  const checkNeeded= await prisma.userMissionStatistics.aggregate({
+	const userInfo = await prisma.user.findUnique({
+		where: {
+			id: userId
+		},
+		select: {
+			name: true,
+			userTag: {
+				select: {
+					tag: {
+						select: {
+							id: true,
+							name: true,
+							category: {
+								select: {
+									id: true,
+									name: true
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	})
+
+  const checkNeeded = await prisma.userMissionStatistics.aggregate({
     where: {
       userId
     },
@@ -67,30 +92,31 @@ const getMissionStatistics = async (userId) => {
     }
   })
 
-  return { checkNeeded, checkCompletes, checkDays }
+  return { userInfo, checkNeeded, checkCompletes, checkDays }
 }
 
 const getUserMission = async (userId, date) => {
-  return histories = await prisma.userMission.findMany({
-    where: {
-      userId,
-      date
-    },
+  return await prisma.group.findMany({
     select: {
       id: true,
+      name: true,
       mission: {
         select: {
-          id: true,
-          name: true,
+          userMission: {
+            select: {
+              userMissionImage: {
+                select: {
+                  imageUrl: true
+                }
+              }
+            },
+            where: {
+              userId,
+              date
+            }
+          }
         }
-      },
-      userMissionImage: {
-        select: {
-          id: true,
-          imageUrl: true,
-          createdAt: true
-        }
-      } 
+      }
     }
   })
 }
