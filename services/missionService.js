@@ -76,14 +76,7 @@ const getMissionCompleteness = async (userId, date) => {
   inputDate.setUTCFullYear(yyyy, mm-1, dd)
   inputDate.setUTCHours(0,0,0,0)
 
-  const completeness = await missionDao.getUserMission(userId, inputDate);
-  console.log(completeness)
-
-  completeness.forEach(group => {
-    group.missionImages = []
-    group.mission
-  })
-  return completeness
+  return await missionDao.getUserMission(userId, inputDate);
 }
 
 export default { getMissions, getMissionStatistics, getMissionCompleteness };

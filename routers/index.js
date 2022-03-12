@@ -9,7 +9,8 @@ const router = express.Router();
 
 router.use("/ping", (req, res) => {
   console.log('pong')
-  return (res.status(200).json({ message: 'pong' }
+  const time = new Date()
+  return (res.status(200).json({ message: 'pong', serverTime: time.toUTCString() }
 ))})
 
 router.use("/users", userRouter);
