@@ -24,6 +24,7 @@ model User {
   userMission           UserMission[]
   userMissionStatistics UserMissionStatistics[]
   userTag               UserTag[]
+  missionComplete       MissionComplete[]
 
   @@map("users")
 }
@@ -37,6 +38,7 @@ model Group {
   createdAt              DateTime  @default(now()) @map("created_at")
   updatedAt              DateTime? @updatedAt @map("updated_at")
   enrollmentAvailability Boolean   @default(true) @map("enrollment_availability")
+  groupDescription       String?   @map("group_description")
   groupStatusId          Int       @map("group_status_id")
   missionTypeId          Int       @map("mission_type_id")
 
@@ -74,6 +76,7 @@ model Mission {
   group                 Group                   @relation(fields: [groupId], references: [id])
   userMission           UserMission[]
   userMissionStatistics UserMissionStatistics[]
+  missionComplete       MissionComplete[]
 
   @@map("missions")
 }
@@ -148,28 +151,40 @@ model UserGroup {
 }
 
 model UserMission {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  missionId Int      @map("mission_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  mission Mission @relation(fields: [missionId], references: [id])
+
+  @@map("user_missions")
+}
+
+model MissionComplete {
   id        Int       @id @default(autoincrement())
   userId    Int       @map("user_id")
   missionId Int       @map("mission_id")
   date      DateTime? @db.Date
   createdAt DateTime  @default(now()) @map("created_at")
 
-  user             User              @relation(fields: [userId], references: [id])
-  mission          Mission           @relation(fields: [missionId], references: [id])
-  userMissionImage UserMissionImage?
+  user         User          @relation(fields: [userId], references: [id])
+  mission      Mission       @relation(fields: [missionId], references: [id])
+  MissionImage MissionImage?
 
-  @@map("user_missions")
+  @@map("mission_completes")
 }
 
-model UserMissionImage {
-  id            Int      @id @default(autoincrement())
-  userMissionId Int      @map("user_mission_id")@unique
-  imageUrl      String   @map("image_url")
-  createdAt     DateTime @default(now()) @map("created_at")
+model MissionImage {
+  id                Int      @id @default(autoincrement())
+  missionCompleteId Int      @unique @map("mission_complete_id")
+  imageUrl          String   @map("image_url")
+  createdAt         DateTime @default(now()) @map("created_at")
 
-  userMission UserMission @relation(fields: [userMissionId], references: [id])
+  missionComplete MissionComplete @relation(fields: [missionCompleteId], references: [id])
 
-  @@map("user_mission_images")
+  @@map("mission_images")
 }
 
 model UserMissionStatistics {

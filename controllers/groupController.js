@@ -21,4 +21,46 @@ const getGroupsWithMissions = async (req, res) => {
   }
 };
 
-export default { getGroups, getGroupsWithMissions };
+const createGroup = async (req, res) => {
+  try {
+    const {
+      isPublic,
+      missionTypeId,
+      tags,
+      groupName,
+      groupImage,
+      groupDescription,
+      maxMember,
+      // period,
+      missionStartDate,
+      missionName,
+      missionDescription,
+      checkStartTime,
+      checkEndTime,
+    } = req.body
+
+    const hostId = req.foundUser.id
+
+    await groupService.createGroup(
+      hostId,
+      isPublic,
+      missionTypeId,
+      tags,
+      groupName,
+      groupImage,
+      groupDescription,
+      maxMember,
+      // period,
+      missionStartDate,
+      missionName,
+      missionDescription,
+      checkStartTime,
+      checkEndTime
+    )
+    return res.status(201).json({ message: "CREATED" })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export default { getGroups, getGroupsWithMissions, createGroup };

@@ -63,4 +63,38 @@ const getGroupsWithMissions = async (userId) => {
   return groups
 }
 
-export default { getGroups, getGroupsWithMissions };
+const createGroup = async (
+  hostId,
+  isPublic,
+  missionType,
+  tags,
+  groupName,
+  groupImage,
+  groupDescription,
+  maxMember,
+  // period,
+  missionStartDate,
+  missionName,
+  missionDescription,
+  checkStartTime,
+  checkEndTime
+) => {
+  return await groupDao.createGroup(
+    hostId,
+    isPublic,
+    missionType,
+    tags,
+    groupName,
+    groupImage,
+    groupDescription,
+    maxMember,
+    // period,
+    missionStartDate,
+    missionName,
+    missionDescription,
+    checkStartTime,
+    checkEndTime
+  )
+}
+
+export default { getGroups, getGroupsWithMissions, createGroup };
