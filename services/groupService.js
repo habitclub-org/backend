@@ -49,6 +49,7 @@ const getGroupsWithMissions = async (userId) => {
       const now = new Date() 
 
       if (mission.checkStartTime - now > 0) {
+        console.log(mission.checkStartTime)
         mission.checkAvailability = 'waiting'
       } else if (mission.checkEndTime - now < 0) {
         mission.checkAvailability = 'failed'
@@ -72,13 +73,15 @@ const createGroup = async (
   groupImage,
   groupDescription,
   maxMember,
-  // period,
+  period,
   missionStartDate,
   missionName,
   missionDescription,
   checkStartTime,
   checkEndTime
 ) => {
+  const date = new Date(missionStartDate)
+  const missionEndDate = date.setDate(date.getDate() + period * 7)
   return await groupDao.createGroup(
     hostId,
     isPublic,
@@ -88,8 +91,8 @@ const createGroup = async (
     groupImage,
     groupDescription,
     maxMember,
-    // period,
-    missionStartDate,
+    new Date(missionStartDate),
+    new Date(missionEndDate),
     missionName,
     missionDescription,
     checkStartTime,

@@ -31,7 +31,7 @@ const createGroup = async (req, res) => {
       groupImage,
       groupDescription,
       maxMember,
-      // period,
+      period,
       missionStartDate,
       missionName,
       missionDescription,
@@ -40,7 +40,7 @@ const createGroup = async (req, res) => {
     } = req.body
 
     const hostId = req.foundUser.id
-
+    
     await groupService.createGroup(
       hostId,
       isPublic,
@@ -50,7 +50,7 @@ const createGroup = async (req, res) => {
       groupImage,
       groupDescription,
       maxMember,
-      // period,
+      period,
       missionStartDate,
       missionName,
       missionDescription,

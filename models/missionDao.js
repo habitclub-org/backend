@@ -22,9 +22,9 @@ const getMissions = async (userId, date, groupId, limit, page) => {
           content: true,
           checkStartTime: true,
           checkEndTime: true,
-          userMission: {
+          missionComplete: {
             select: {
-              date: true,
+              // date: true,
               userId: true,
               missionId: true,
             },
@@ -101,16 +101,16 @@ const getUserMission = async (userId, date) => {
       SELECT
         g.id as group_id
         ,g.name as group_name
-        ,um.date
-        ,JSON_ARRAYAGG(umi.image_url) AS images
-      FROM user_missions um
-      JOIN missions m ON m.id = um.mission_id
+        ,mc.date
+        ,JSON_ARRAYAGG(mi.image_url) AS images
+      FROM mission_completes mc
+      JOIN missions m ON m.id = mc.mission_id
       JOIN \`groups\` g ON g.id = m.group_id
-      JOIN users u ON u.id = um.user_id
-      JOIN user_mission_images umi ON umi.user_mission_id = um.id
-      WHERE um.user_id = ${userId}
-      AND um.date <= ${date}
-      GROUP BY g.id, um.date
+      JOIN users u ON u.id = mc.user_id
+      JOIN mission_images mi ON mi.mission_complete_id = mc.id
+      WHERE mc.user_id = ${userId}
+      AND mc.date <= ${date}
+      GROUP BY g.id, mc.date
     ) SELECT
       h.date
       ,JSON_ARRAYAGG(

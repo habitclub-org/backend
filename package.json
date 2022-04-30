@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node server.js"
+    "start": "nodemon --exec babel-node server.js",
+    "distribute": "npm i && pm2 start server.js --name habit_club -i max"
   },
   "babel": {
     "presets": [
@@ -30,6 +31,7 @@
     "prisma": "^3.7.0"
   },
   "dependencies": {
-    "@prisma/client": "^3.7.0"
+    "@prisma/client": "^3.7.0",
+    "pm2": "^5.2.0"
   }
 }
