@@ -100,4 +100,16 @@ const createGroup = async (
   )
 }
 
-export default { getGroups, getGroupsWithMissions, createGroup };
+const addGroupMember = async (userId, groupId) => {
+  const date = new Date()
+  const group = await groupDao.getGroup(Number(groupId))
+  console.log(group)
+  await groupDao.createUserGroup(userId, Number(groupId))
+}
+
+export default {
+  getGroups,
+  getGroupsWithMissions,
+  createGroup,
+  addGroupMember
+};

@@ -116,6 +116,23 @@ const getGroups = async (search, limit, page) => {
   });
 };
 
+const getGroup = async (groupId) => {
+  return await prisma.group.findUnique({
+    where: {
+      id: groupId
+    },
+    select: {
+      maximumMember: true,
+      userGroup: true,
+      mission: {
+        select: {
+          startsAt: true
+        }
+      }
+    }
+  })
+}
+
 const createGroup = async (
   hostId,
   isPublic,
@@ -132,7 +149,8 @@ const createGroup = async (
   checkStartTime,
   checkEndTime
 ) => {
-  // console.log(new Date(checkStartTime))
+  console.log(checkStartTime)
+  console.log(new Date(checkStartTime))
   const createdGroup = await prisma.$transaction([
     prisma.group.create({
       data: {
@@ -169,7 +187,7 @@ const createGroup = async (
             content: missionDescription,
             startsAt: missionStartDate,
             endsAt: missionEndDate,
-            checkStartTime: checkStartTime,
+            checkStartTime: new Date(checkStartTime),
             checkEndTime: new Date(),
             userMission: {
               create: {
@@ -183,4 +201,19 @@ const createGroup = async (
   ])
 }
 
-export default { getGroups, getGroupsByUserId, createGroup };
+const createUserGroup = async (userId, groupId) => {
+  return await prisma.userGroup.create({
+    data: {
+      userId,
+      groupId
+    }
+  })
+}
+
+export default {
+  getGroups,
+  getGroupsByUserId,
+  createGroup,
+  getGroup,
+  createUserGroup
+};

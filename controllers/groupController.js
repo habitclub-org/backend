@@ -63,4 +63,21 @@ const createGroup = async (req, res) => {
   }
 }
 
-export default { getGroups, getGroupsWithMissions, createGroup };
+const addGroupMember = async (req, res) => {
+  try {
+    const userId = req.foundUser.id
+    const groupId = req.params.groupId
+
+    await groupService.addGroupMember(userId, groupId)
+    return res.status(201).json({message: "MEMBER_ADDED"})
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export default {
+  getGroups,
+  getGroupsWithMissions,
+  createGroup,
+  addGroupMember
+};
