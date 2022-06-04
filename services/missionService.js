@@ -70,14 +70,20 @@ const getMissionStatistics = async (userId) => {
   }
 }
 
-const getMissionCompleteness = async (userId, date) => {
-  const [yyyy, mm, dd] = date.split('-')
+const getMissionCompleteness = async (userId, startDate, endDate) => {
+  const [syyyy, smm, sdd] = startDate.split('-')
+  const [eyyyy, emm, edd] = endDate.split('-')
 
   let inputDate = new Date()
-  inputDate.setUTCFullYear(yyyy, mm-1, dd)
-  inputDate.setUTCHours(0,0,0,0)
+  let inputStartDate = new Date()
+  let inputEndDate = new Date()
 
-  return await missionDao.getUserMission(userId, inputDate);
+  inputStartDate.setUTCFullYear(syyyy, smm-1, sdd)
+  inputStartDate.setUTCHours(0,0,0,0)
+  inputEndDate.setUTCFullYear(eyyyy, emm-1, edd)
+  inputEndDate.setUTCHours(0,0,0,0)
+
+  return await missionDao.getUserMission(userId, inputStartDate, inputEndDate);
 }
 
 export default { getMissions, getMissionStatistics, getMissionCompleteness };

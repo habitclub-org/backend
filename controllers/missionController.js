@@ -25,8 +25,8 @@ const getMissionStatistics = async (req, res) => {
 const getMissionCompleteness = async (req, res) => {
   try {
     const userId = req.foundUser.id
-    const { date } = req.query
-    const completeness = await missionService.getMissionCompleteness(userId, date)
+    const { startDate, endDate } = req.query
+    const completeness = await missionService.getMissionCompleteness(userId, startDate, endDate)
     return res.status(200).json(completeness)
   } catch (err) {
     console.log(err)

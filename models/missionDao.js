@@ -95,7 +95,7 @@ const getMissionStatistics = async (userId) => {
   return { userInfo, checkNeeded, checkCompletes, checkDays }
 }
 
-const getUserMission = async (userId, date) => {
+const getUserMission = async (userId, startDate, endDate) => {
 	return await prisma.$queryRaw`
     WITH history AS (
       SELECT
@@ -109,7 +109,8 @@ const getUserMission = async (userId, date) => {
       JOIN users u ON u.id = mc.user_id
       JOIN mission_images mi ON mi.mission_complete_id = mc.id
       WHERE mc.user_id = ${userId}
-      AND mc.date <= ${date}
+      AND mc.date <= ${endDate}
+      AND mc.date >= ${startDate}
       GROUP BY g.id, mc.date
     ) SELECT
       h.date
@@ -123,7 +124,6 @@ const getUserMission = async (userId, date) => {
     FROM history h
     GROUP BY date
     ORDER BY date DESC
-    LIMIT 7
 	`
 }
 export default { getMissions, getMissionStatistics, getUserMission };
