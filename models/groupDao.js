@@ -59,6 +59,36 @@ const getGroupsByUserId = async (userId, limit, page) => {
   });
 }
 
+const getGroup = async (groupId) => {
+  return await prisma.$queryRaw`
+    SELECT
+      \`groups\`.id as groupId,
+      \`groups\`.name as groupName,
+      group_description,
+      first_mission.name as missionName,
+      first_mission.content as missionContent,
+      first_mission.starts_at as missionStartDate,
+      first_mission.ends_at as missionEndDate,
+      mission_types.name as missionType,
+      users.name as hostName
+    FROM
+      \`groups\`
+    JOIN (
+      SELECT DISTINCT
+        group_id, 
+        missions.name,
+        missions.content,
+        missions.starts_at,
+        missions.ends_at
+      FROM missions
+      LIMIT 1
+    ) AS first_mission ON first_mission.group_id = \`groups\`.id
+    JOIN users ON users.id = \`groups\`.host_id
+    JOIN mission_types ON mission_types.id = \`groups\`.mission_type_id
+    WHERE \`groups\`.id = ${groupId}
+  `
+}
+
 const getGroups = async (search, limit, page) => {
   return await prisma.group.findMany({
     take: +limit,
@@ -116,22 +146,22 @@ const getGroups = async (search, limit, page) => {
   });
 };
 
-const getGroup = async (groupId) => {
-  return await prisma.group.findUnique({
-    where: {
-      id: groupId
-    },
-    select: {
-      maximumMember: true,
-      userGroup: true,
-      mission: {
-        select: {
-          startsAt: true
-        }
-      }
-    }
-  })
-}
+// const getGroup = async (groupId) => {
+//   return await prisma.group.findUnique({
+//     where: {
+//       id: groupId
+//     },
+//     select: {
+//       maximumMember: true,
+//       userGroup: true,
+//       mission: {
+//         select: {
+//           startsAt: true
+//         }
+//       }
+//     }
+//   })
+// }
 
 const createGroup = async (
   hostId,
@@ -212,6 +242,7 @@ const createUserGroup = async (userId, groupId) => {
 
 export default {
   getGroups,
+  getGroup,
   getGroupsByUserId,
   createGroup,
   getGroup,
