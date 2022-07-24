@@ -70,7 +70,8 @@ const getGroup = async (groupId) => {
       first_mission.starts_at as missionStartDate,
       first_mission.ends_at as missionEndDate,
       mission_types.name as missionType,
-      users.name as hostName
+      users.name as hostName,
+      JSON_ARRAYAGG(ug.user_id) AS members
     FROM
       \`groups\`
     JOIN (
@@ -85,7 +86,9 @@ const getGroup = async (groupId) => {
     ) AS first_mission ON first_mission.group_id = \`groups\`.id
     JOIN users ON users.id = \`groups\`.host_id
     JOIN mission_types ON mission_types.id = \`groups\`.mission_type_id
+    JOIN user_groups ug ON ug.group_id = \`groups\`.id
     WHERE \`groups\`.id = ${groupId}
+    GROUP BY \`groups\`.id
   `
 }
 
