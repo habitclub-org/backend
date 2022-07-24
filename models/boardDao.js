@@ -1,7 +1,12 @@
 import prisma from "../prisma";
 
-const getBoardsByUserId= async (userId) => {
+const getBoardsByGroupId= async (groupId) => {
   const boards = await prisma.board.findMany({
+		where: {
+			group: {
+				id: groupId
+			}
+		},
 		select: {
 			id: true,
 			group: {
@@ -18,7 +23,12 @@ const getBoardsByUserId= async (userId) => {
 			},
 			content: true,
 			createdAt: true,
-			BoardLike: true,
+			BoardLike: {
+				select: {
+				  userId: true,
+				  emoticonCode: true
+				}
+			},
 			missionBoard: {
 				select: {
 					complete: {
@@ -37,4 +47,4 @@ const getBoardsByUserId= async (userId) => {
   return boards	
 }
 
-export default { getBoardsByUserId };
+export default { getBoardsByGroupId };

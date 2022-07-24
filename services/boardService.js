@@ -1,7 +1,7 @@
 import { boardDao } from '../models'
 
-const getBoards = async (userId) => {
-  const boards = await boardDao.getBoardsByUserId(userId)
+const getBoards = async (userId, groupId) => {
+  const boards = await boardDao.getBoardsByGroupId(groupId)
 
 	return boards
 }
