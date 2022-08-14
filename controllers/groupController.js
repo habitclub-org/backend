@@ -81,7 +81,19 @@ const addGroupMember = async (req, res) => {
     const groupId = req.params.groupId
 
     await groupService.addGroupMember(userId, groupId)
-    return res.status(201).json({message: "MEMBER_ADDED"})
+    return res.status(201).json({ message: "MEMBER_ADDED" })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const getGroupMemberCompletes = async (req, res) => {
+  try {
+    const userId = req.foundUser.id
+    const groupId = req.params.groupId
+
+    const memberCompletes = await groupService.getGroupMemberCompletes(userId, groupId)
+    return groupService.status(200).json({ memberCompletes })
   } catch (err) {
     console.log(err);
   }
@@ -92,5 +104,6 @@ export default {
   getGroup,
   getGroupsWithMissions,
   createGroup,
-  addGroupMember
+  addGroupMember,
+  getGroupMemberCompletes
 };

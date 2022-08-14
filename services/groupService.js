@@ -122,7 +122,17 @@ const addGroupMember = async (userId, groupId) => {
   const date = new Date()
   const group = await groupDao.getGroup(Number(groupId))
   console.log(group)
-  await groupDao.createUserGroup(userId, Number(groupId))
+  return await groupDao.createUserGroup(userId, Number(groupId))
+}
+
+const getGroupMemberCompletes = async(userId, groupId) => {
+  // const memberCompletes = await groupDao.getGroupMissionCompletesByUserId(userId, Number(groupId))
+  const membersCompletes = await groupDao.getGroupMemberCompletes(Number(groupId))
+  
+  console.log('2', membersCompletes)
+
+  
+  return { memberCompletes, membersCompletes }
 }
 
 export default {
@@ -130,5 +140,6 @@ export default {
   getGroup,
   getGroupsWithMissions,
   createGroup,
-  addGroupMember
+  addGroupMember,
+  getGroupMemberCompletes
 };

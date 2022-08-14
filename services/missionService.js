@@ -1,4 +1,3 @@
-import e from "cors";
 import { missionDao } from "../models";
 
 const getMissions = async (userId, date, groupId, limit=5, page=1) => {

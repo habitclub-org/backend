@@ -243,11 +243,29 @@ const createUserGroup = async (userId, groupId) => {
   })
 }
 
+const getGroupMemberCompletes = async(groupId) => {
+  return await prisma.$queryRaw`
+    SELECT 
+      u.id as userId
+      ,u.name as userName
+      ,u.profile_image_url as profileImageUrl
+      ,SUM(ums.total_check_needed) as checkNeeded
+      ,SUM(ums.check_completed) as completed
+    FROM habit_club.missions m
+    JOIN \`groups\` g ON g.id = m.group_id
+    JOIN user_mission_statistics ums ON ums.mission_id = m.id
+    JOIN users u ON u.id = ums.user_id
+    WHERE g.id = ${groupId}
+    GROUP BY u.id, g.id
+  `
+}
+
 export default {
   getGroups,
   getGroup,
   getGroupsByUserId,
   createGroup,
   getGroup,
-  createUserGroup
+  createUserGroup,
+  getGroupMemberCompletes
 };
