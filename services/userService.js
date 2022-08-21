@@ -18,7 +18,7 @@ const signIn = async (email) => {
   const existingUser = await userDao.getUserByEmail(email)
 
   if (!existingUser) {
-
+    throw new Error('INVALID_USER')
   }
   const userToken = jwt.sign({ userId: existingUser.id }, process.env.JWT_SECRET_KEY)
   return userToken 
