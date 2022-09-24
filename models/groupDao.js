@@ -182,8 +182,8 @@ const createGroup = async (
   checkStartTime,
   checkEndTime
 ) => {
-  console.log(checkStartTime)
-  console.log(new Date(checkStartTime))
+    console.log('ms: ', missionStartDate)
+    console.log('me: ', missionEndDate)
   const createdGroup = await prisma.$transaction([
     prisma.group.create({
       data: {
@@ -220,8 +220,8 @@ const createGroup = async (
             content: missionDescription,
             startsAt: missionStartDate,
             endsAt: missionEndDate,
-            checkStartTime: new Date(checkStartTime),
-            checkEndTime: new Date(),
+            checkStartTime: missionStartDate,
+            checkEndTime: missionEndDate, 
             userMission: {
               create: {
                 userId: hostId

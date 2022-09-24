@@ -19,7 +19,9 @@ const createMissionComplete = async (
 	)
 
 	if (checkedTime > mission.checkEndTime) {
-		throw new Error("CHECK_TIME_LATE")
+		const error = new Error("CHECK_TIME_LATE")
+		error.statusCode = 400
+		throw error 
 	}
 
 	// image S3 업로드 과정 추가 필요

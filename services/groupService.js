@@ -98,8 +98,10 @@ const createGroup = async (
   checkStartTime,
   checkEndTime
 ) => {
+  const startDate = new Date(missionStartDate)
   const date = new Date(missionStartDate)
-  const missionEndDate = date.setDate(date.getDate() + period * 7)
+  date.setDate(date.getDate() + period * 7)
+
   return await groupDao.createGroup(
     hostId,
     isPublic,
@@ -109,8 +111,8 @@ const createGroup = async (
     groupImage,
     groupDescription,
     maxMember,
-    new Date(missionStartDate),
-    new Date(missionEndDate),
+    startDate,
+    date,
     missionName,
     missionDescription,
     checkStartTime,
