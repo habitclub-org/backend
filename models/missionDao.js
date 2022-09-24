@@ -95,6 +95,14 @@ const getMissionStatistics = async (userId) => {
   return { userInfo, checkNeeded, checkCompletes, checkDays }
 }
 
+const getMission = async (missionId) => {
+  return await prisma.mission.findUnique({
+    where: {
+      id: missionId 
+    }
+  })
+}
+
 const getUserMission = async (userId, startDate, endDate) => {
 	return await prisma.$queryRaw`
     WITH history AS (
@@ -126,4 +134,4 @@ const getUserMission = async (userId, startDate, endDate) => {
     ORDER BY date DESC
 	`
 }
-export default { getMissions, getMissionStatistics, getUserMission };
+export default { getMissions, getMissionStatistics, getMission, getUserMission };

@@ -1,4 +1,4 @@
-import { completeDao } from '../models'
+import { completeDao, missionDao } from '../models'
 
 const createMissionComplete = async (
 	userId,
@@ -8,9 +8,20 @@ const createMissionComplete = async (
 	time,
 	contents
 ) => {
-	// STEP 1 : 인증 마감 validation
+	const mission = await missionDao.getMission(missionId)
 
-  // STEP 2, STEP 3, STEP 4는 transaction으로 같이 처리해야함
+	const checkedTime = new Date(
+		'1970-' + 
+		mission.checkEndTime.getMonth() + 
+		mission.checkEndTime.getDate() + 
+		'T' + time
+	)
+
+	if (checkedTime > mission.checkEndTime) {
+		throw new Error("CHECK_TIME_LATE")
+	}
+
+	// image S3 업로드 과정 추가 필요
 
 	return completeDao.createMissionComplete(userId, missionId, imageUrl, date, time, contents) 
 }
