@@ -5,8 +5,6 @@ const createMissionComplete = async (req, res) => {
   const { missionId } = req.params
 	const { imageUrl, date, time, contents } = req.body
 
-	console.log('params: ', req.params)
-
   const completes = await completeService.createMissionComplete(
 		userId,
 		Number(missionId),

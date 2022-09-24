@@ -12,9 +12,7 @@ const createMissionComplete = async (
 
   // STEP 2, STEP 3, STEP 4는 transaction으로 같이 처리해야함
 
-	console.log(userId, missionId, imageUrl, date, time, contents)
-
-	return 1 
+	return completeDao.createMissionComplete(userId, missionId, imageUrl, date, time, contents) 
 }
 
 export default { createMissionComplete };

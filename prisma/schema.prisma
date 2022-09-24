@@ -177,6 +177,7 @@ model MissionComplete {
   MissionImage MissionImage?
   missionBoard missionBoard[]
 
+  @@unique([userId, missionId, date])
   @@map("mission_completes")
 }
 
@@ -203,6 +204,7 @@ model UserMissionStatistics {
   user    User    @relation(fields: [userId], references: [id])
   mission Mission @relation(fields: [missionId], references: [id])
 
+  @@unique([userId, missionId])
   @@map("user_mission_statistics")
 }
 
