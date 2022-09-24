@@ -3,4 +3,8 @@ const groupType = {
 	allGroup :  'all'
 }
 
-export { groupType }
+const boardType = {
+	missionBoard: 1
+}
+
+export { groupType, boardType }

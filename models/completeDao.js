@@ -3,10 +3,11 @@ import prisma from "../prisma";
 const createMissionComplete = async (
 	userId,
 	missionId,
+	groupId,
 	imageUrl,
 	date,
-	time,
-	contents
+	content,
+	boardTypeId
 ) => {
   const boards = await prisma.$transaction([
 		prisma.missionComplete.create({
@@ -24,8 +25,8 @@ const createMissionComplete = async (
 							create: {
 								userId,
 								groupId: 1,
-								boardTypeId: 1,
-								content: contents
+								boardTypeId,
+								content
 							}
 						}
 					}
