@@ -1,0 +1,359 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0", 
+    "title": "Habit club API document",
+    "description": "Welcome to Habit club API system",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "3.37.172.118:8081",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    },{
+			"name": "Groups",
+			"description": "API for groups"
+		}
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+	"paths": {
+		"/groups": {
+			"get": {
+				"tags": ["Groups"],
+				"summary": "Get all groups",
+				"parameters": [
+					{
+						"in": "header",
+						"name": "token",
+						"description": "jwt token",
+						"required": true,
+						"type": "string",
+						"default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTY0NDAzNjAyNH0.K4QROiv5OiIQyaaB6hJeGuH_JAJNUML2PO6R2lsoiVc"
+					}, {
+						"in": "query",
+						"name": "type",
+						"description": "all: get all groups , me : only groups certain member has joined",
+						"type": "string",
+						"enum": ["all", "me", null]
+					},{
+						"in": "query",
+						"name": "search",
+						"description": "그룹명 검색",
+						"type": "string",
+						"required": false
+					}, {
+						"in": "query",
+						"name": "limit",
+						"description": "the number of data set received per a request (length of data array)",
+            "type": "integer",
+						"default": 5
+					}, {
+						"in": "query",
+						"name": "page",
+						"description": "page number",
+            "type": "integer",
+						"default": 1
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/Groups"
+						}
+					}
+				}
+			}
+		},
+		"/missions": {
+			"get": {
+				"tags": ["인증하기"],
+				"summary": "list up all missions to complete of a member",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "date",
+						"description": "Date of today",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "query",
+						"name": "groupId",
+						"type": "integer"
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"description": "",
+						"type": "integer",
+						"default": 5
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"description": "",
+						"type": "integer",
+						"default": 1
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "array",
+							"items": {
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"name": {
+										"type": "string"
+									},
+									"missions": {
+										"type": "array",
+										"items": {
+											"$ref": "#/definitions/Mission"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/missions/statistics": {
+			"get": {
+				"tags": ["나의 인증"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/UserInfo"
+						}
+					}
+				}
+			}
+		}
+  },
+  "definitions": {
+    "User": {
+      "required": ["name", "_id", "companies"],
+      "properties": {
+        "_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "books": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "companies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+		"updateUser": {
+			"required": ["name", "companies"],
+			"properties": {
+				"isPublic": {
+					"type": "boolean"
+				},
+				"name": {
+					"type": "string"
+				},
+				"books": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"amount": {
+								"type": "number"
+							}
+						}
+					}
+				},
+				"companies": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"Group": {
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"thumbnailImageUrl": {
+					"type": "string"
+				},
+				"runningWeeks": {
+					"type": "integer"
+				},
+				"currentMember": {
+					"type": "integer"
+				},
+				"daysLeft": {
+					"type": "integer"
+				},
+				"isPrivate": {
+					"type": "boolean"
+				},
+				"inEnrolled": {
+					"type": "boolean"
+				},
+				"inAvailable": {
+					"type": "boolean"
+				},
+				"tags": {
+					"type": "array",
+					"items": {
+						"$ref": "#definitions/Tag"
+					}
+				}
+			}
+		},
+		"Groups": {
+			"properties": {
+				"numGroups": {
+					"type" : "integer"
+				},
+				"groups": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Group"
+					}
+				}
+			}
+		},
+		"Tag": {
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"tagCategory": {
+					"$ref": "#definitions/TagCategory"
+				}
+			}
+		},
+		"TagCategory": {
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				}
+			}
+		},
+		"Mission": {
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"content": {
+					"type": "string"
+				},
+				"checkAvailability": {
+					"type": "string"
+				},
+				"isCompleted": {
+					"type": "boolean",
+					"description": "인증 완료 여부"
+				},
+				"startTime": {
+					"type": "string",
+				},
+				"endTime": {
+					"type": "string"
+				}
+			}
+		},
+		"UserInfo": {
+			"properties": {
+				"userInfo": {
+					"type": "string",
+					"description": "member name"
+				},
+				"userTags": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/UserTag"
+					}
+				},
+				"completeRate": {
+					"type": "number",
+					"description": "인증 성공률(%)"
+				},
+				"completes": {
+					"type": "integer",
+					"description": "누적 인증 수"
+				},
+				"completedDays": {
+					"type": "integer",
+					"description": "누적 인증일 수"
+				}
+			}
+		},
+		"UserTag": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "tag id"
+				},
+				"name": {
+					"type": "string",
+					"description": "tag name"
+				},
+				"category": {
+					"$ref": "#/definitions/TagCategory"
+				}
+			}
+		}
+  }
+}
