@@ -14,12 +14,11 @@ const getGroups = async (req, res) => {
 const getGroup = async (req, res) => {
   try {
     const { id: groupId } = req.params
-    console.log('groupId: ', groupId)
     const group = await groupService.getGroup(Number(groupId))
-    console.log('group: ', group)
     return res.status(200).json ({ group })
   } catch (err) {
     console.log(err);
+    res.status(err.status || 500).json({message: err.message})
   }
 }
 

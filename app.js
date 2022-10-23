@@ -16,13 +16,11 @@ const createApp = () => {
 		swaggerUi.setup(swaggerDocument, { explorer: true })
 	)
 
-
-
   app.use(router);
 	app.use(cors());
 
 	const logRequestStart = (req, res, next) => {
-		console.info(`${req.method}, ${req.headers.authorization}`)
+		console.info(`${req.method}, ${req.headers.token}`)
 		next();
 	};
 

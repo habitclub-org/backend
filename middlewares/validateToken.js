@@ -7,7 +7,6 @@ const { JWT_SECRET_KEY } = process.env
 const validateToken = async (req, res, next) => {
   try {
     const { token } = req.headers;
-    console.log('t: ', jwt.verify(token, JWT_SECRET_KEY))
     const { userId } = jwt.verify(token, JWT_SECRET_KEY) // 암호화된 토큰을 복호화 합니다.
 
     const foundUser = await userService.findUser(userId)

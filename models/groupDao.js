@@ -64,17 +64,21 @@ const getGroup = async (groupId) => {
     SELECT
       \`groups\`.id as groupId,
       \`groups\`.name as groupName,
-      group_description,
-      first_mission.name as missionName,
-      first_mission.content as missionContent,
-      first_mission.starts_at as missionStartDate,
-      first_mission.ends_at as missionEndDate,
+      group_description as groupDescription,
       mission_types.name as missionType,
       users.name as hostName,
-      JSON_ARRAYAGG(ug.user_id) AS members
+      JSON_ARRAYAGG(ug.user_id) AS members,
+      JSON_ARRAYAGG(
+        JSON_OBJECT(
+          'missionName',first_mission.name,
+          'missionContent', first_mission.content,
+          'missionStartDate', first_mission.starts_at,
+          'missionEndDate', first_mission.ends_at
+        )
+      ) AS mission
     FROM
       \`groups\`
-    JOIN (
+    LEFT JOIN (
       SELECT DISTINCT
         group_id, 
         missions.name,
@@ -82,11 +86,10 @@ const getGroup = async (groupId) => {
         missions.starts_at,
         missions.ends_at
       FROM missions
-      LIMIT 1
     ) AS first_mission ON first_mission.group_id = \`groups\`.id
-    JOIN users ON users.id = \`groups\`.host_id
-    JOIN mission_types ON mission_types.id = \`groups\`.mission_type_id
-    JOIN user_groups ug ON ug.group_id = \`groups\`.id
+    LEFT JOIN users ON users.id = \`groups\`.host_id
+    LEFT JOIN mission_types ON mission_types.id = \`groups\`.mission_type_id
+    LEFT JOIN user_groups ug ON ug.group_id = \`groups\`.id
     WHERE \`groups\`.id = ${groupId}
     GROUP BY \`groups\`.id
   `

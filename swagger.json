@@ -39,9 +39,9 @@
 					}, {
 						"in": "query",
 						"name": "type",
-						"description": "all: get all groups , me : only groups certain member has joined",
 						"type": "string",
-						"enum": ["all", "me", null]
+						"default": "all",
+						"enum": ["all", "me"]
 					},{
 						"in": "query",
 						"name": "search",
@@ -51,13 +51,13 @@
 					}, {
 						"in": "query",
 						"name": "limit",
-						"description": "the number of data set received per a request (length of data array)",
+						"description": "한 번에 조회할 데이터 수",
             "type": "integer",
 						"default": 5
 					}, {
 						"in": "query",
 						"name": "page",
-						"description": "page number",
+						"description": "pagination시 이용할 페이지 번호",
             "type": "integer",
 						"default": 1
 					}
@@ -460,24 +460,27 @@
 				"groupDescription": {
 					"type": "string"
 				},
+				"missionType": {
+					"type": "string"
+				},
 				"missionName": {
 					"type": "string"
 				},
 				"missionContent": {
 					"type": "string"
 				},
-				"missionStartDate": {
+				"startDate": {
 					"type": "string",
 					"description": "형식 : 'YYYY-MM-DDThh:mm:ss+00:00"
-				},
-				"missionType": {
-					"type": "string"
 				},
 				"hostName": {
 					"type": "string"
 				},
 				"runningWeeks": {
-					"type": "string"
+					"type": "integer"
+				},
+				"numberOfMembers": {
+					"type": "integer"
 				}
 			}
 		},

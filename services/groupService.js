@@ -39,19 +39,26 @@ const getGroups = async (userId, type, search, limit=5, page=1) => {
 
 const getGroup = async (groupId) => {
   const [group] = await groupDao.getGroup(groupId)
-  console.log('group!!: ', group.missionEndDate - group.missionStartDate)
-  const running = new Date(group.missionEndDate) - new Date(group.missionStartDate)
-
-  group.runningWeeks = running/3600/24/1000/7
-
-  delete group.missionEndDate
 
   if (!group) {
-    const err = new Error('NOT_FOUND')
+    const err = new Error('GROUP_NOT_FOUND')
     err.status = 404
-
     throw err
   }
+
+  const [mission] = group.mission
+  
+  const running = new Date(mission.missionEndDate) - new Date(mission.missionStartDate)
+
+  group.runningWeeks = running/3600/24/1000/7
+  group.numberOfMembers = group.members[0]
+  group.missionName = mission.missionName,
+  group.missionContent = mission.missionContent,
+  group.startDate = mission.missionStartDate
+
+  delete group.mission
+  delete group.members
+
   return group
 }
 
