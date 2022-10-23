@@ -15,7 +15,7 @@ const getGroup = async (req, res) => {
   try {
     const { id: groupId } = req.params
     const group = await groupService.getGroup(Number(groupId))
-    return res.status(200).json ({ group })
+    return res.status(200).json (group)
   } catch (err) {
     console.log(err);
     res.status(err.status || 500).json({message: err.message})
@@ -76,13 +76,15 @@ const createGroup = async (req, res) => {
 
 const addGroupMember = async (req, res) => {
   try {
-    const userId = req.foundUser.id
-    const groupId = req.params.groupId
+    const { id: userId } = req.foundUser
+    const { groupId } = req.params
+    const { invitationCode } = req.body
 
-    await groupService.addGroupMember(userId, groupId)
-    return res.status(201).json({ message: "MEMBER_ADDED" })
+    const startDate = await groupService.addGroupMember(userId, groupId, invitationCode)
+    return res.status(201).json({ message: "MEMBER_ADDED", startDate })
   } catch (err) {
     console.log(err);
+    res.status(err.status || 500).json({ message: err.message })
   }
 }
 

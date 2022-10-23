@@ -64,6 +64,7 @@ const getGroup = async (groupId) => {
     SELECT
       \`groups\`.id as groupId,
       \`groups\`.name as groupName,
+      \`groups\`.group_status_id as groupStatusId,
       group_description as groupDescription,
       mission_types.name as missionType,
       users.name as hostName,
@@ -151,6 +152,15 @@ const getGroups = async (search, limit, page) => {
     },
   });
 };
+
+const getUserGroup = async (userId, groupId) => {
+  return await prisma.$queryRaw`
+    SELECT EXISTS (
+      SELECT id FROM user_groups
+      WHERE user_id = ${userId} AND group_id = ${groupId}
+    ) as existence
+  `
+}
 
 // const getGroup = async (groupId) => {
 //   return await prisma.group.findUnique({
@@ -270,5 +280,6 @@ export default {
   createGroup,
   getGroup,
   createUserGroup,
-  getGroupMemberCompletes
+  getGroupMemberCompletes,
+  getUserGroup
 };

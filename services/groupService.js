@@ -1,5 +1,5 @@
 import { groupDao } from "../models";
-import { groupType } from "../types";
+import { groupStatusType, groupType } from "../types";
 
 const getGroups = async (userId, type, search, limit=5, page=1) => {
   if (type == groupType.myGroup) {
@@ -51,7 +51,7 @@ const getGroup = async (groupId) => {
   const running = new Date(mission.missionEndDate) - new Date(mission.missionStartDate)
 
   group.runningWeeks = running/3600/24/1000/7
-  group.numberOfMembers = group.members[0]
+  group.numberOfMembers = group.members.length
   group.missionName = mission.missionName,
   group.missionContent = mission.missionContent,
   group.startDate = mission.missionStartDate
@@ -127,11 +127,31 @@ const createGroup = async (
   )
 }
 
-const addGroupMember = async (userId, groupId) => {
-  const date = new Date()
-  const group = await groupDao.getGroup(Number(groupId))
-  console.log(group)
-  return await groupDao.createUserGroup(userId, Number(groupId))
+const addGroupMember = async (userId, groupId, invitationCode) => {
+  const [group] = await groupDao.getGroup(Number(groupId))
+  const [groupInvitationCode] = ['aaa'] 
+
+  if (group.groupStatusId === groupStatusType.PRIVATE) {
+    if (!invitationCode) {
+      const error = new Error('INVITATION_CODE_REQUIRED')
+      error.status = 403
+      throw error
+    }
+    if (invitationCode !== groupInvitationCode) {
+      const error = new Error('INVALID_INVITATAION')
+      error.status = 400
+      throw error
+    }
+  }
+
+  const [isMember] = await groupDao.getUserGroup(userId, groupId)
+  if (isMember.existence) {
+    const error = new Error('ALREADY_MEMBER')
+    error.status = 409
+    throw error
+  }
+  await groupDao.createUserGroup(userId, Number(groupId))
+  return group.mission[0].missionStartDate 
 }
 
 const getGroupMemberCompletes = async(userId, groupId) => {

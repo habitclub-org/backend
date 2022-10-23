@@ -12,13 +12,6 @@
   "host": "3.37.172.118:8081",
   "basePath": "/",
   "tags": [
-    {
-      "name": "Users",
-      "description": "API for users in the system"
-    },{
-			"name": "Groups",
-			"description": "API for groups"
-		}
   ],
   "schemes": ["http"],
   "consumes": ["application/json"],
@@ -26,7 +19,7 @@
 	"paths": {
 		"/groups": {
 			"get": {
-				"tags": ["Groups"],
+				"tags": ["그룹 조회"],
 				"summary": "Get all groups",
 				"parameters": [
 					{
@@ -106,7 +99,7 @@
 		"/groups/{groupId}": {
 			"get": {
 				"summary": "그룹 참여시 사용하는 그룹 상세 정보 호출",
-				"tags": ["그룹 참여"],
+				"tags": ["그룹 상세 정보", "그룹 참여"],
 				"parameters": [
 					{
 						"in": "header",
@@ -126,12 +119,7 @@
 					"200": {
 						"description": "OK",
 						"schema": {
-							"type": "object",
-							"properties":{
-								"group": {
-									"$ref": "#/definitions/GroupDetail"
-								}
-							}
+							"$ref": "#/definitions/GroupDetail"
 						}
 					}
 				}
@@ -167,6 +155,15 @@
 				"responses": {
 					"201": {
 						"description": "OK"
+					},
+					"403": {
+						"description": "초대 코드 없이 비공개 그룹 참여 시도시"
+					},
+					"400": {
+						"description": "초대 코드 잘못되었음"
+					},
+					"409": {
+						"description": "이미 참여한 멤버가 같은 그룹에 재참여 시도시"
 					}
 				}
 			}
@@ -498,7 +495,7 @@
 			}
 		},
 		"CreateGroup": {
-			"required": ["groupName", "maximumMember", "thumbnailImageUrl", "isPublic", "missionTypeId", "missionName", "missionDescription", "missionStartDate", "checkStartTime", "checkEndTime", "groupDescription", "tages"],
+			"required": ["groupName", "maximumMember", "thumbnailImageUrl", "isPublic", "missionType", "missionName", "missionDescription", "missionStartDate", "checkStartTime", "checkEndTime", "groupDescription", "tages"],
 			"properties": {
 				"groupName": {
 					"type": "string"
@@ -513,15 +510,35 @@
 				"isPublic": {
 					"type": "boolean",
 					"description": "공개 그룹인지, 비공개 그룹인지 여부",
-					"default": 1
+					"default": 1,
+					"enum": [1, 0]
 				},
-				"missionTypeId": {
-					"type": "integer",
-					"description": "그룹 미션하는 그룹인지 - 1, 개인 미션 하는 그룹인지 - 2"
+				"missionType": {
+					"type": "string",
+					"description": "그룹 미션하는 그룹인지 - 1, 개인 미션 하는 그룹인지 - 2",
+					"enum": ["GROUP", "INDIVIDUAL"]
 				},
 				"missionDescription": {
-					"type": "string",
-					"description" : "첫 미션에 대한 간략한 설명"
+					"type": "array",
+					"description" : "시작할 미션에 대한 간략한 설명",
+					"items": {
+						"properties": {
+							"missionName": {
+								"type": "string"
+							},
+							"missionContent": {
+								"type": "string"
+							},
+							"checkStartTime": {
+								"type": "string",
+								"description": "인증이 가능한 시작 시간. 형식 : 'hh:mm:ss'"
+							},
+						  "checkEndTime": {
+								"type": "string",
+								"description": "인증이 가능한 끝 시간. 이 시간 이후 인증 불가. 형식 : 'hh:mm:ss'"
+							}
+						}
+					}
 				},
 				"missionStartDate": {
 					"type": "string",
@@ -530,14 +547,6 @@
 				"runningWeeks": {
 					"type": "integer",
 					"description": "몇 주 인증 미션인지"
-				},
-				"checkStartTime": {
-					"type": "string",
-					"description": "인증이 가능한 시작 시간. 형식 : 'hh:mm:ss'"
-				},
-				"checkEndTime": {
-					"type": "string",
-					"description": "인증이 가능한 끝 시간. 이 시간 이후 인증 불가. 형식 : 'hh:mm:ss'"
 				},
 				"groupDescription": {
 					"type": "string",
