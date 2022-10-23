@@ -20,7 +20,7 @@
 		"/groups": {
 			"get": {
 				"tags": ["그룹 조회"],
-				"summary": "Get all groups",
+				"summary": "홈 화면에서 그룹 조회 및 검색",
 				"parameters": [
 					{
 						"in": "header",

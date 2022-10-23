@@ -14,7 +14,6 @@ const getMissions = async (userId, date, groupId, limit=5, page=1) => {
 
     for (let j = 0; j < group.mission.length; j++) {
       const mission = group.mission[j]
-      console.log('mission: ', mission)
       const now = new Date()
 
       const missionStartTime = mission.checkStartTime.toTimeString()
